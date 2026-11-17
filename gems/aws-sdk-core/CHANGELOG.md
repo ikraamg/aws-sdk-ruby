@@ -1,6 +1,8 @@
 Unreleased Changes
 ------------------
 
+* Issue - `Aws.eager_autoload!` now loads the constants that service gems declare with `autoload`, instead of only printing a warning.
+
 3.269.0 (2026-11-16)
 ------------------
 

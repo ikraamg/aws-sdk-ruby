@@ -46,6 +46,19 @@ module Aws
 
   end
 
+  describe '.eager_autoload!' do
+    subject(:pending_autoloads) do
+      Aws.constants.map { |name| Aws.const_get(name) }.grep(Module).flat_map do |mod|
+        mod.constants.select { |name| mod.autoload?(name) }
+      end
+    end
+
+    it 'leaves no service or core constant waiting on a lazy require' do
+      Aws.eager_autoload!
+      expect(pending_autoloads).to be_empty
+    end
+  end
+
   describe '.empty_connection_pools!' do
     it 'closes any existing sessions' do
       endpoint = "http://example.com"
