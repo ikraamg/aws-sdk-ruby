@@ -153,11 +153,14 @@ module Aws
       end
     end
 
-    # @api private
-    def eager_autoload!(*args)
-      msg = 'Aws.eager_autoload is no longer needed, usage of '\
-            'autoload has been replaced with require statements'
-      warn(msg)
+    # Loads every constant that service gems and aws-sdk-core declare with
+    # `autoload`, for apps that cannot load files lazily once booted.
+    # Rails apps get this through aws-sdk-rails when eager loading is on.
+    def eager_autoload!(*_args)
+      constants.each do |name|
+        mod = const_get(name)
+        mod.constants.each { |constant| mod.const_get(constant) } if mod.is_a?(Module)
+      end
     end
 
   end
